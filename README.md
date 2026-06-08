@@ -1,84 +1,317 @@
 # 💰 AI Money Mentor
 
-> **A Smart Portfolio X-Ray & AI-Powered Wealth Advisor for Indian Mutual Funds.**
+> AI-Powered Mutual Fund Portfolio X-Ray & Wealth Analysis Platform
 
-AI Money Mentor parses standard CAMS CAS statements to calculate your true annualized returns (XIRR), expose hidden fees (Expense Drag), detect overlap risks across funds, and deliver grounded, compliant investment advice.
-
----
-
-## 🚀 Key Features
-
-*   **Smart PDF CAS Ingestion:** Extract transaction logs and portfolio holdings from Consolidated Account Statements.
-*   **True Return Analytics (XIRR):** Utilizes numerical solvers (Newton-Raphson) to compute your exact annualized internal rate of return based on transaction dates.
-*   **Expense Cost Drag:** Visualizes the long-term impact of expense ratios, highlighting how much you pay in fees every year.
-*   **Fund Overlap & Risk Detection:** Employs Jaccard Similarity to find overlapping stock holdings and flag concentration risks.
-*   **Interactive Benchmarking:** Live comparison against Nifty 50, Sensex, Midcap, and Smallcap indexes with customizable time horizons.
-*   **Grounded AI Advisory:** Integrated Groq LLM (Llama 3.3 70B) acting as a SEBI-registered advisor providing hallucination-free portfolio health reports.
+AI Money Mentor helps Indian mutual fund investors understand their true portfolio performance by analyzing CAMS Consolidated Account Statements (CAS), calculating XIRR, measuring expense drag, detecting fund overlap, benchmarking against market indices, and generating AI-powered portfolio insights.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## 🌐 Live Demo
 
-*   **Frontend:** [Streamlit](https://streamlit.io/) (Responsive, custom CSS variables, dynamic Plotly visualisations)
-*   **Engine & Math:** [SciPy](https://scipy.org/) (Newton-Raphson Solver), [Pandas](https://pandas.pydata.org/) (Data processing)
-*   **PDF Extraction:** [pdfplumber](https://github.com/samkit-w/pdfplumber)
-*   **LLM Core:** [Groq Cloud SDK](https://groq.com/) (Llama-3.3-70B-Versatile)
-*   **Tests:** [Pytest](https://pytest.org/) (53 unit tests validating math, parsing, and pipeline edge cases)
+**Application:** https://ai-money-mentor-ub96dcmvkptpsttmsk5a7w.streamlit.app/
+
+**GitHub Repository:** https://github.com/Tanmay-Pant9915/AI-Money-Mentor
 
 ---
 
-## 🏃 Getting Started
+# 🚀 Features
 
-### Prerequisites
-*   Python 3.10+
-*   Groq API Key
+### 📄 CAMS Statement Processing
 
-### Installation
+* Upload CAMS Consolidated Account Statement (CAS) PDFs
+* Automatic extraction of holdings, folio numbers, units, NAV, and transaction history
+* Multi-fund portfolio support
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/ai-money-mentor.git
-   cd ai-money-mentor
-   ```
+### 📈 True Portfolio Return Analysis
 
-2. Set up a virtual environment and install dependencies:
-   ```bash
-   pip install uv  # Highly recommended
-   uv venv
-   .venv\Scripts\activate  # On Windows
-   uv sync
-   ```
+* XIRR (Extended Internal Rate of Return) calculation
+* Transaction-aware annualized return measurement
+* Portfolio-level weighted return analysis
 
-3. Create a `.env` file in the root directory:
-   ```env
-   GROQ_API_KEY=your_groq_api_key_here
-   ```
+### 💸 Expense Drag Analysis
 
-4. Run the Streamlit application:
-   ```bash
-   uv run streamlit run app.py
-   ```
+* Fund-wise expense ratio tracking
+* Annual fee impact estimation
+* Portfolio-wide cost drag calculation
 
-5. Run the test suite:
-   ```bash
-   uv run pytest -v
-   ```
+### 🔄 Fund Overlap Detection
+
+* Pairwise overlap matrix
+* Jaccard Similarity based overlap analysis
+* Concentrated stock identification
+* Common holdings frequency analysis
+
+### 📊 Benchmark Comparison
+
+Compare performance against:
+
+* Nifty 50
+* Sensex
+* Midcap Index
+* Smallcap Index
+
+Features:
+
+* Alpha analysis
+* Outperforming vs underperforming fund detection
+* Benchmark visualization
+
+### 🤖 AI Portfolio Mentor
+
+Powered by Groq + Llama 3.3 70B.
+
+Provides:
+
+* Portfolio health assessment
+* Returns analysis
+* Expense analysis
+* Risk identification
+* Actionable recommendations
+
+### 📉 Interactive Visualizations
+
+* Portfolio allocation charts
+* XIRR comparison charts
+* Expense drag charts
+* Overlap frequency charts
+* Benchmark performance visualizations
 
 ---
 
-## 📊 Math & Methodology
+# 🛠️ Tech Stack
 
-### 1. Annualized Returns (XIRR)
-Calculated by solving for $r$ in the Net Present Value equation:
-$$NPV = \sum_{i=1}^{n} \frac{C_i}{(1 + r)^{\frac{d_i - d_1}{365}}} = 0$$
-Where $C_i$ is the cashflow amount on date $d_i$.
+## Frontend
 
-### 2. Fund Overlap (Jaccard Similarity)
-Identifies duplicate exposure across funds $A$ and $B$:
-$$\text{Overlap \%} = \frac{|H_A \cap H_B|}{|H_A \cup H_B|} \times 100$$
-Where $H$ is the set of stock holdings.
+* Streamlit
+* Plotly
+
+## Backend & Analytics
+
+* Python
+* Pandas
+* SciPy
+
+## Financial Computation
+
+* Newton-Raphson Solver
+* XIRR Engine
+* Jaccard Similarity Analysis
+
+## PDF Processing
+
+* pdfplumber
+
+## AI Layer
+
+* Groq Cloud SDK
+* Llama 3.3 70B Versatile
+
+## Testing
+
+* Pytest
+
+## Deployment
+
+* GitHub
+* Streamlit Community Cloud
 
 ---
 
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
+# 🏗️ System Architecture
+
+CAS PDF Upload
+
+↓
+
+PDF Parsing Engine
+
+↓
+
+Portfolio Extraction Layer
+
+↓
+
+Analytics Engine
+
+├── XIRR Calculation
+
+├── Expense Drag Analysis
+
+├── Fund Overlap Detection
+
+└── Benchmark Comparison
+
+↓
+
+AI Recommendation Engine
+
+↓
+
+Interactive Dashboard
+
+---
+
+# 📊 Mathematical Models
+
+## XIRR (Extended Internal Rate of Return)
+
+The application computes annualized returns by solving:
+
+NPV = Σ(Cᵢ / (1+r)^((dᵢ-d₁)/365))
+
+Where:
+
+* Cᵢ = Cashflow amount
+* dᵢ = Transaction date
+* r = Annualized return
+
+The equation is solved numerically using SciPy's Newton-Raphson method.
+
+---
+
+## Fund Overlap Detection
+
+Overlap between two funds is calculated using Jaccard Similarity:
+
+Overlap % = |A ∩ B| / |A ∪ B| × 100
+
+Where:
+
+* A = Holdings of Fund A
+* B = Holdings of Fund B
+
+This identifies duplicate exposure across mutual funds.
+
+---
+
+# 🧪 Testing
+
+Current Status:
+
+✅ 60 / 60 Tests Passing
+
+Coverage Includes:
+
+* PDF Parsing
+* Portfolio Extraction
+* XIRR Calculations
+* Expense Drag Analysis
+* Benchmark Analytics
+* Overlap Detection
+* Portfolio Analysis Pipeline
+
+Run tests:
+
+```bash
+uv run pytest -v
+```
+
+---
+
+# ⚙️ Local Setup
+
+### Clone Repository
+
+```bash
+git clone https://github.com/Tanmay-Pant9915/AI-Money-Mentor.git
+
+cd AI-Money-Mentor
+```
+
+### Create Virtual Environment
+
+```bash
+uv venv
+```
+
+Activate:
+
+Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+### Install Dependencies
+
+```bash
+uv pip install -r requirements.txt
+```
+
+### Configure API Key
+
+Create a `.env` file:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+### Run Application
+
+```bash
+uv run streamlit run app.py
+```
+
+---
+
+# 🔒 Privacy & Security
+
+* Uploaded PDFs are processed locally during analysis.
+* Temporary PDF files are automatically deleted after processing.
+* API keys are stored securely using environment variables or Streamlit Secrets.
+* No user portfolio data is permanently stored.
+
+---
+
+# 🔮 Future Roadmap
+
+### Portfolio Analytics
+
+* Historical NAV Integration
+* Portfolio Timeline Analysis
+* SIP Performance Tracking
+* Goal-Based Investing Analysis
+
+### Optimization Features
+
+* Portfolio Rebalancing Suggestions
+* Risk Scoring Engine
+* Asset Allocation Analysis
+
+### Data Infrastructure
+
+* Live Mutual Fund Data APIs
+* Persistent Portfolio Storage
+* User Authentication
+
+### Reporting
+
+* Downloadable PDF Reports
+* Portfolio Sharing
+* Automated Monthly Reviews
+
+---
+
+# 👨‍💻 Author
+
+**Tanmay Pant**
+
+B.Tech Computer Science Engineering
+
+Manipal University Jaipur
+
+---
+
+# ⭐ Project Impact
+
+Most retail investors only see current portfolio value.
+
+AI Money Mentor converts raw mutual fund statements into actionable financial intelligence by helping investors understand:
+
+* What they actually earned (XIRR)
+* How much fees reduce returns
+* Whether funds overlap excessively
+* How they compare against benchmarks
+* What actions can improve portfolio quality
+
+The objective is to make professional-grade portfolio analysis accessible to everyday investors.

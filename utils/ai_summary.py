@@ -7,14 +7,15 @@ import json
 
 load_dotenv()
 
-api_key = st.secrets.get(
-    "GROQ_API_KEY",
-    os.getenv("GROQ_API_KEY")
-)
+api_key = os.getenv("GROQ_API_KEY")
+if not api_key:
+    try:
+        api_key = st.secrets.get("GROQ_API_KEY")
+    except Exception:
+        api_key = None
 
-client = Groq(
-    api_key=api_key
-)
+client = Groq(api_key=api_key) if api_key else None
+
 
 # ---------------------------------------------------------------------------
 # SYSTEM PROMPT
@@ -114,6 +115,12 @@ def generate_portfolio_summary(portfolio_data: list) -> str:
         total_value=total_value,
         total_expense=total_expense,
     )
+
+    if client is None:
+        return (
+            "⚠️ **AI Analysis unavailable** — GROQ_API_KEY is missing or invalid. "
+            "Please set a valid key in your `.env` file and restart the app."
+        )
 
     try:
         response = client.chat.completions.create(

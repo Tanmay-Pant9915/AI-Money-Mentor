@@ -31,48 +31,269 @@ st.set_page_config(
 # Initialize SQLite database tables idempotently at startup
 init_db()
 
-# Custom premium styling using CSS variables for dark/light mode compatibility
+# Custom premium dark-mode styling — fintech aesthetic (Linear / Vercel / Stripe vibes)
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-    
-    /* Apply font family */
-    html, body, [data-testid="stSidebar"], .stMarkdown {
+
+    /* ── Global font ─────────────────────────────────────────── */
+    html, body, [data-testid="stSidebar"], .stMarkdown, .stApp {
         font-family: 'Outfit', sans-serif;
     }
-    
-    /* Metric Card styling */
-    .metric-card {
-        background: linear-gradient(135deg, var(--secondary-background-color), var(--background-color));
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        padding: 22px;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        text-align: center;
-        margin-bottom: 15px;
+
+    /* ── App background ──────────────────────────────────────── */
+    .stApp {
+        background-color: #0a0a0f;
     }
-    .metric-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        border-color: var(--primary-color);
+
+    /* ── Sidebar ─────────────────────────────────────────────── */
+    [data-testid="stSidebar"] {
+        background-color: #0d0d14;
+        border-right: 1px solid rgba(99, 102, 241, 0.2);
     }
-    .metric-label {
-        font-size: 0.85rem;
-        color: var(--text-color);
-        opacity: 0.75;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 8px;
-    }
-    .metric-value {
-        font-size: 1.75rem;
-        color: var(--primary-color);
+
+    /* ── Headings ────────────────────────────────────────────── */
+    h1, h2 {
+        background: linear-gradient(135deg, #f1f5f9, #a5b4fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         font-weight: 800;
     }
-    </style>
+    h3 { color: #e2e8f0; font-weight: 700; }
+    h4 { color: #cbd5e1; font-weight: 700; }
+
+    /* ── Metric cards — glassmorphism ────────────────────────── */
+    .metric-card {
+        background: linear-gradient(135deg, rgba(22, 22, 31, 0.9), rgba(17, 17, 24, 0.95));
+        border: 1px solid rgba(99, 102, 241, 0.15);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        margin-bottom: 16px;
+        backdrop-filter: blur(10px);
+    }
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(99, 102, 241, 0.2);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    .metric-label {
+        font-size: 0.75rem;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 10px;
+    }
+    .metric-value {
+        font-size: 1.9rem;
+        color: #6366f1;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+    }
+
+    /* ── Buttons ─────────────────────────────────────────────── */
+    .stButton > button {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        font-family: 'Outfit', sans-serif;
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.45);
+    }
+    .stButton > button[kind="secondary"] {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        color: #a5b4fc;
+        box-shadow: none;
+    }
+
+    /* ── Dataframes ──────────────────────────────────────────── */
+    [data-testid="stDataFrame"] {
+        border: 1px solid rgba(99, 102, 241, 0.15);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    /* ── Sidebar nav radio ───────────────────────────────────── */
+    [data-testid="stSidebar"] [data-testid="stRadio"] label {
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: background 0.2s;
+        font-weight: 500;
+        color: #94a3b8;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
+        background: rgba(99, 102, 241, 0.1);
+        color: #c7d2fe;
+    }
+
+    /* ── Top navigation ─────────────────────────────────────── */
+    div[data-testid="stRadio"] > label {
+        display: none;
+    }
+    div[data-testid="stRadio"] > div[role="radiogroup"] {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 6px;
+        margin-bottom: 20px;
+        background: rgba(13, 13, 22, 0.88);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 14px;
+        backdrop-filter: blur(12px);
+    }
+    div[data-testid="stRadio"] [data-baseweb="radio"] {
+        padding: 9px 13px;
+        border-radius: 9px;
+        transition: all 0.2s ease;
+    }
+    div[data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
+        display: none;
+    }
+    div[data-testid="stRadio"] [data-baseweb="radio"] > div:last-child {
+        color: #94a3b8;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+    div[data-testid="stRadio"] [data-baseweb="radio"]:hover,
+    div[data-testid="stRadio"] [aria-checked="true"] {
+        background: rgba(99, 102, 241, 0.2);
+    }
+    div[data-testid="stRadio"] [aria-checked="true"] > div:last-child {
+        color: #c7d2fe;
+    }
+
+    /* ── Alert / info / warning boxes ───────────────────────── */
+    [data-testid="stAlert"] {
+        border-radius: 12px;
+        border-left-width: 4px;
+        backdrop-filter: blur(8px);
+    }
+
+    /* ── Dividers ────────────────────────────────────────────── */
+    hr { border-color: rgba(99, 102, 241, 0.15); }
+
+    /* ── Input fields ────────────────────────────────────────── */
+    .stTextInput > div > div,
+    .stNumberInput > div > div,
+    .stSelectbox > div > div {
+        background: rgba(22, 22, 31, 0.8);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 10px;
+        color: #f1f5f9;
+    }
+
+    /* ── Progress bars ───────────────────────────────────────── */
+    .stProgress > div > div {
+        background: linear-gradient(90deg, #6366f1, #10b981);
+        border-radius: 999px;
+    }
+
+    /* ── General text colour override ────────────────────────── */
+    p, li, span, label, .stMarkdown {
+        color: #cbd5e1;
+    }
+
+    /* ── File uploader ── */
+    [data-testid="stFileUploader"] {
+        background: rgba(17, 17, 28, 0.6) !important;
+        border: 2px dashed rgba(99, 102, 241, 0.3) !important;
+        border-radius: 14px !important;
+        transition: border-color 0.2s ease !important;
+    }
+    [data-testid="stFileUploader"]:hover {
+        border-color: rgba(99, 102, 241, 0.6) !important;
+    }
+
+    /* ── Chat messages ── */
+    [data-testid="stChatMessage"] {
+        background: rgba(17, 17, 28, 0.7) !important;
+        border: 1px solid rgba(99, 102, 241, 0.12) !important;
+        border-radius: 14px !important;
+        backdrop-filter: blur(8px) !important;
+        margin-bottom: 12px !important;
+    }
+    .stChatInput > div {
+        background: rgba(17, 17, 28, 0.9) !important;
+        border: 1px solid rgba(99, 102, 241, 0.25) !important;
+        border-radius: 14px !important;
+    }
+
+    /* ── Expander ── */
+    [data-testid="stExpander"] {
+        border: 1px solid rgba(99, 102, 241, 0.15) !important;
+        border-radius: 12px !important;
+        background: rgba(13, 13, 22, 0.6) !important;
+        overflow: hidden !important;
+    }
+
+    /* ── Native Metric widget ── */
+    [data-testid="stMetric"] {
+        background: rgba(17, 17, 28, 0.6) !important;
+        border: 1px solid rgba(99, 102, 241, 0.12) !important;
+        border-radius: 12px !important;
+        padding: 16px !important;
+    }
+    [data-testid="stMetricValue"] { color: #818cf8 !important; font-weight: 800 !important; }
+    [data-testid="stMetricLabel"] {
+        color: #64748b !important;
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+    }
+
+    /* ── Tabs ── */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 4px !important;
+        background: rgba(13, 13, 22, 0.8) !important;
+        border-radius: 12px !important;
+        padding: 4px !important;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px !important;
+        color: #64748b !important;
+        font-weight: 600 !important;
+        font-family: 'Outfit', sans-serif !important;
+        transition: all 0.2s ease !important;
+    }
+    .stTabs [aria-selected="true"] {
+        background: rgba(99, 102, 241, 0.2) !important;
+        color: #a5b4fc !important;
+    }
+
+    /* ── Caption ── */
+    .stCaption, [data-testid="stCaptionContainer"] {
+        color: #475569 !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #09090f; }
+    ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }
+
+    /* ── Button hover glow fix ── */
+    .stButton > button:hover {
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5) !important;
+    }
+        </style>
     """,
     unsafe_allow_html=True
 )
@@ -88,30 +309,80 @@ if "overlap_report" not in st.session_state:
 if "benchmark_report" not in st.session_state:
     st.session_state.benchmark_report = None
 
-st.sidebar.title("💰 AI Money Mentor")
+# The sidebar is intentionally reserved for the document workflow.
+st.sidebar.title("📄 Document Upload")
+st.sidebar.caption("Upload a detailed CAMS statement to begin.")
+uploaded_file = st.sidebar.file_uploader(
+    "Upload CAMS CAS PDF",
+    type=["pdf"],
+)
+
+if uploaded_file:
+    if st.session_state.uploaded_file_name != uploaded_file.name:
+        st.session_state.result = None
+        st.session_state.summary = None
+        st.session_state.uploaded_file_name = uploaded_file.name
+
+_do_analyze = False
+if uploaded_file and st.session_state.result is None:
+    _do_analyze = st.sidebar.button(
+        "🚀 Analyze Portfolio",
+        type="primary",
+        use_container_width=True,
+    )
+if st.session_state.result is not None:
+    if st.sidebar.button("🧹 Clear & Reset", use_container_width=True):
+        st.session_state.result = None
+        st.session_state.summary = None
+        st.session_state.uploaded_file_name = None
+        st.rerun()
+
+st.sidebar.divider()
+st.sidebar.markdown(
+    """
+    <p style="color:#64748b;font-size:0.74rem;line-height:1.6;">
+    Get your <b>Consolidated Account Statement</b> from
+    <a href="https://www.camsonline.com/" target="_blank" style="color:#818cf8;">CAMS Online</a>.
+    Choose <b>Detailed</b> format for XIRR calculation.
+    </p>
+    """,
+    unsafe_allow_html=True,
+)
 
 nav_options = [
-    "📊 CAMS Portfolio Analysis",
-    "👤 Financial Profile",
-    "🎯 Risk Assessment",
-    "🩺 Money Health Score",
-    "📋 Financial Planning & Budgeting",
-    "🎯 Goal Investment Planning",
-    "🏖️ FIRE & Retirement Planning",
-    "🛡️ Emergency Fund & Insurance Planning",
-    "🏷️ Tax Optimization & Planning",
-    "🤖 AI Financial Mentor",
+    "📊 Portfolio",
+    "👤 Profile",
+    "🎯 Risk",
+    "🩺 Health",
+    "📋 Budget",
+    "🎯 Goals",
+    "🏖️ FIRE",
+    "🛡️ Protection",
+    "🏷️ Tax",
+    "🤖 AI Mentor",
 ]
+nav_routes = {
+    "📊 Portfolio": "📊 CAMS Portfolio Analysis",
+    "👤 Profile": "👤 Financial Profile",
+    "🎯 Risk": "🎯 Risk Assessment",
+    "🩺 Health": "🩺 Money Health Score",
+    "📋 Budget": "📋 Financial Planning & Budgeting",
+    "🎯 Goals": "🎯 Goal Investment Planning",
+    "🏖️ FIRE": "🏖️ FIRE & Retirement Planning",
+    "🛡️ Protection": "🛡️ Emergency Fund & Insurance Planning",
+    "🏷️ Tax": "🏷️ Tax Optimization & Planning",
+    "🤖 AI Mentor": "🤖 AI Financial Mentor",
+}
+short_by_route = {route: short for short, route in nav_routes.items()}
 default_index = 0
-if "nav_override" in st.session_state and st.session_state["nav_override"] in nav_options:
-    default_index = nav_options.index(st.session_state.pop("nav_override"))
+if "nav_override" in st.session_state:
+    override = st.session_state.pop("nav_override")
+    if override in short_by_route:
+        default_index = nav_options.index(short_by_route[override])
 
-nav_selection = st.sidebar.radio(
-    "Navigation",
-    nav_options,
-    index=default_index,
-)
-st.sidebar.divider()
+nav_selection = nav_routes[
+    st.radio("Navigation", nav_options, index=default_index, horizontal=True)
+]
 
 if nav_selection == "👤 Financial Profile":
     render_profile_view()
@@ -163,108 +434,76 @@ elif nav_selection == "🤖 AI Financial Mentor":
             cas_portfolio = None
     render_chat_mentor_view(portfolio_data=cas_portfolio)
 else:
-    st.sidebar.subheader("Portfolio Control Panel")
-
-    uploaded_file = st.sidebar.file_uploader(
-        "Upload CAMS CAS PDF",
-        type=["pdf"]
-    )
-
-    if uploaded_file:
-        if st.session_state.uploaded_file_name != uploaded_file.name:
-            st.session_state.result = None
-            st.session_state.summary = None
-            st.session_state.uploaded_file_name = uploaded_file.name
-
-    if st.session_state.result is not None:
-        if st.sidebar.button("🧹 Clear & Reset", use_container_width=True):
-            st.session_state.result = None
-            st.session_state.summary = None
-            st.session_state.uploaded_file_name = None
-            st.rerun()
-
-    st.sidebar.divider()
-    st.sidebar.markdown(
-        """
-        ### 📂 How to get your statement:
-        1. Request a **Consolidated Account Statement (CAS)** from [CAMS Online](https://www.camsonline.com/).
-        2. Choose **Detailed** statement (includes transaction history for XIRR calculation).
-        3. Enter a password if required.
-        4. Download the PDF statement.
-        """
-    )
-
     st.title("💰 AI Money Mentor")
     st.caption("Mutual Fund Portfolio X-Ray & AI-Powered Advisory")
     st.divider()
 
-    if uploaded_file and st.session_state.result is None:
-        if st.sidebar.button("🚀 Analyze Portfolio", type="primary", use_container_width=True):
-            try:
-                with st.spinner("Analyzing Statement..."):
-                    with open("temp.pdf", "wb") as f:
-                        f.write(uploaded_file.getbuffer())
+    if _do_analyze:
+        try:
+            with st.spinner("Analyzing Statement..."):
+                with open("temp.pdf", "wb") as f:
+                    f.write(uploaded_file.getbuffer())
 
-                    # Step 1: Extract PDF text — may raise PDFReadError or EmptyPDFError.
-                    text = extract_text("temp.pdf")
+                # Step 1: Extract PDF text — may raise PDFReadError or EmptyPDFError.
+                text = extract_text("temp.pdf")
 
-                    # Step 2: Parse fund blocks from text.
-                    df = parse_funds(text)
+                # Step 2: Parse fund blocks from text.
+                df = parse_funds(text)
 
-                    if df.empty:
-                        st.error(
-                            "❌ **No mutual fund data found.** "
-                            "The PDF was readable but contained no CAMS scheme blocks. "
-                            "Please upload a **Detailed** CAMS Consolidated Account Statement."
-                        )
-                        st.stop()
+                if df.empty:
+                    st.error(
+                        "❌ **No mutual fund data found.** "
+                        "The PDF was readable but contained no CAMS scheme blocks. "
+                        "Please upload a **Detailed** CAMS Consolidated Account Statement."
+                    )
+                    st.stop()
 
-                    # Step 3: Run portfolio analysis (XIRR + expense drag + overlap + benchmark).
-                    result, overlap_report, benchmark_report = analyze_portfolio(df)
-                    st.session_state.result = result
-                    st.session_state.overlap_report = overlap_report
-                    st.session_state.benchmark_report = benchmark_report
+                # Step 3: Run portfolio analysis (XIRR + expense drag + overlap + benchmark).
+                result, overlap_report, benchmark_report = analyze_portfolio(df)
+                st.session_state.result = result
+                st.session_state.overlap_report = overlap_report
+                st.session_state.benchmark_report = benchmark_report
 
-                    # Step 4: Generate LLM recommendations.
-                    # ai_summary never raises — returns a user-friendly string on any error.
-                    ai_df = result.drop(columns=["transactions"], errors="ignore")
-                    portfolio_json = ai_df.to_dict(orient="records")
+                # Step 4: Generate LLM recommendations.
+                # ai_summary never raises — returns a user-friendly string on any error.
+                ai_df = result.drop(columns=["transactions"], errors="ignore")
+                portfolio_json = ai_df.to_dict(orient="records")
 
-                with st.spinner("Consulting AI Money Mentor..."):
-                    summary = generate_portfolio_summary(portfolio_json)
-                    st.session_state.summary = summary
+            with st.spinner("Consulting AI Money Mentor..."):
+                summary = generate_portfolio_summary(portfolio_json)
+                st.session_state.summary = summary
 
-                st.success("✅ Analysis Complete!")
-                st.rerun()
+            st.success("✅ Analysis Complete!")
+            st.rerun()
 
-            except PDFReadError as exc:
-                st.error(
-                    f"❌ **Could not read the PDF.** {exc} "
-                    "\n\nMake sure you uploaded a valid, non-encrypted CAMS PDF."
-                )
+        except PDFReadError as exc:
+            st.error(
+                f"❌ **Could not read the PDF.** {exc} "
+                "\n\nMake sure you uploaded a valid, non-encrypted CAMS PDF."
+            )
 
-            except EmptyPDFError as exc:
-                st.error(f"❌ **PDF has no readable text.** {exc}")
+        except EmptyPDFError as exc:
+            st.error(f"❌ **PDF has no readable text.** {exc}")
 
-            except ValueError as exc:
-                # Raised by analyze_portfolio for missing columns or empty DataFrames.
-                st.error(f"❌ **Portfolio data error:** {exc}")
+        except ValueError as exc:
+            # Raised by analyze_portfolio for missing columns or empty DataFrames.
+            st.error(f"❌ **Portfolio data error:** {exc}")
 
-            except OSError as exc:
-                st.error(
-                    f"❌ **File system error** while saving the uploaded PDF: {exc}"
-                )
+        except OSError as exc:
+            st.error(
+                f"❌ **File system error** while saving the uploaded PDF: {exc}"
+            )
 
-            except Exception:
-                st.error(
-                    "❌ **An unexpected error occurred.** "
-                    "Please try re-uploading your statement."
-                )
+        except Exception:
+            st.error(
+                "❌ **An unexpected error occurred.** "
+                "Please try re-uploading your statement."
+            )
 
-            finally:
-                # Always clean up the temporary PDF — never persist user data to disk.
-                if os.path.exists("temp.pdf"):
-                    os.remove("temp.pdf")
+        finally:
+            # Always clean up the temporary PDF — never persist user data to disk.
+            if os.path.exists("temp.pdf"):
+                os.remove("temp.pdf")
 
 
     def format_indian_currency(val: float | None) -> str:
@@ -806,10 +1045,10 @@ else:
         with col_f1:
             st.markdown(
                 """
-                <div style="background-color: var(--secondary-background-color); border: 1px solid rgba(128,128,128,0.12); padding: 25px; border-radius: 16px; text-align: center; height: 100%;">
-                    <div style="font-size: 2.5rem; margin-bottom: 12px;">📈</div>
-                    <h4 style="margin: 0 0 10px 0; font-weight: 700;">Precision XIRR</h4>
-                    <p style="font-size: 0.9rem; opacity: 0.8; margin: 0; line-height: 1.5;">Calculates exact annualized returns using your transaction dates, giving you the real yield of your investments.</p>
+                <div style="background: rgba(17, 17, 24, 0.9); border: 1px solid rgba(99, 102, 241, 0.15); border-top: 3px solid #6366f1; padding: 28px 25px; border-radius: 16px; text-align: center; height: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.3); transition: all 0.3s ease;">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: rgba(99, 102, 241, 0.15); border-radius: 50%; margin-bottom: 16px; font-size: 1.8rem;">📈</div>
+                    <h4 style="margin: 0 0 10px 0; font-weight: 700; color: #e2e8f0;">Precision XIRR</h4>
+                    <p style="font-size: 0.9rem; color: #64748b; margin: 0; line-height: 1.6;">Calculates exact annualized returns using your transaction dates, giving you the real yield of your investments.</p>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -817,10 +1056,10 @@ else:
         with col_f2:
             st.markdown(
                 """
-                <div style="background-color: var(--secondary-background-color); border: 1px solid rgba(128,128,128,0.12); padding: 25px; border-radius: 16px; text-align: center; height: 100%;">
-                    <div style="font-size: 2.5rem; margin-bottom: 12px;">💸</div>
-                    <h4 style="margin: 0 0 10px 0; font-weight: 700;">Expense Drag Analysis</h4>
-                    <p style="font-size: 0.9rem; opacity: 0.8; margin: 0; line-height: 1.5;">Uncovers the compound drag of high expense ratios and shows the exact yearly cost impact of direct vs. regular funds.</p>
+                <div style="background: rgba(17, 17, 24, 0.9); border: 1px solid rgba(99, 102, 241, 0.15); border-top: 3px solid #10b981; padding: 28px 25px; border-radius: 16px; text-align: center; height: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.3); transition: all 0.3s ease;">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: rgba(16, 185, 129, 0.15); border-radius: 50%; margin-bottom: 16px; font-size: 1.8rem;">💸</div>
+                    <h4 style="margin: 0 0 10px 0; font-weight: 700; color: #e2e8f0;">Expense Drag Analysis</h4>
+                    <p style="font-size: 0.9rem; color: #64748b; margin: 0; line-height: 1.6;">Uncovers the compound drag of high expense ratios and shows the exact yearly cost impact of direct vs. regular funds.</p>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -828,10 +1067,10 @@ else:
         with col_f3:
             st.markdown(
                 """
-                <div style="background-color: var(--secondary-background-color); border: 1px solid rgba(128,128,128,0.12); padding: 25px; border-radius: 16px; text-align: center; height: 100%;">
-                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🤖</div>
-                    <h4 style="margin: 0 0 10px 0; font-weight: 700;">AI Advisor Recommendations</h4>
-                    <p style="font-size: 0.9rem; opacity: 0.8; margin: 0; line-height: 1.5;">Get clear, customized suggestions to optimize asset classes, reduce costs, and accelerate compounding.</p>
+                <div style="background: rgba(17, 17, 24, 0.9); border: 1px solid rgba(99, 102, 241, 0.15); border-top: 3px solid #a855f7; padding: 28px 25px; border-radius: 16px; text-align: center; height: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.3); transition: all 0.3s ease;">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: rgba(168, 85, 247, 0.15); border-radius: 50%; margin-bottom: 16px; font-size: 1.8rem;">🤖</div>
+                    <h4 style="margin: 0 0 10px 0; font-weight: 700; color: #e2e8f0;">AI Advisor Recommendations</h4>
+                    <p style="font-size: 0.9rem; color: #64748b; margin: 0; line-height: 1.6;">Get clear, customized suggestions to optimize asset classes, reduce costs, and accelerate compounding.</p>
                 </div>
                 """,
                 unsafe_allow_html=True
